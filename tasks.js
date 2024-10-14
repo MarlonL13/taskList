@@ -3,7 +3,7 @@ let taskList = [
     id: 1,
     description: "First task",
     status: "pending",
-    priority: 1,
+    priority: 5,
     dueDate: null,
   },
   {
@@ -18,7 +18,7 @@ let taskList = [
 let taskIdCounter = taskList.length + 1;
 
 function createNewTask(description, priority, dueDate) {
-    priority = Number(priority)
+  priority = Number(priority);
   let task = {
     id: taskIdCounter++,
     description: description,
@@ -51,4 +51,19 @@ function toggleStatus(id) {
   }
 }
 
-module.exports = { taskList, createNewTask, removeTask, toggleStatus };
+function editTask(id, newDescription, newPriority, newDueDate) {
+  id = Number(id);
+  newPriority = Number(newPriority);
+  const task = taskList.find((task) => task.id === id);
+  if (task) {
+    if (newDescription) task.description = newDescription;
+    if (newPriority) task.priority = newPriority;
+    if (newDueDate) task.dueDate = newDueDate;
+    console.log("Task updated successfully: ");
+    console.log(task);
+  } else {
+    console.log("Task not found");
+  }
+}
+
+module.exports = { taskList, createNewTask, removeTask, toggleStatus, editTask };

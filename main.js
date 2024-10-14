@@ -1,9 +1,17 @@
-const { askUser, rl } = require("./userInterface");
+const {
+  askUser,
+  rl,
+  showPending,
+  showCompleted,
+  showPriority,
+} = require("./userInterface");
+
 const {
   taskList,
   createNewTask,
   removeTask,
   toggleStatus,
+  editTask,
 } = require("./tasks");
 
 let exit = false;
@@ -12,7 +20,7 @@ async function main() {
   try {
     while (!exit) {
       const aswer = await askUser(
-        "What do you want to do? (add/remove/toggle/view/exit) "
+        "What do you want to do? (add/remove/toggle/view/exit/pending/completed/sort/edit) "
       ); // Wait for the user to input
       switch (aswer) {
         case "view":
@@ -30,6 +38,23 @@ async function main() {
           createNewTask(description, priority, dueDate);
           console.log(taskList);
           break;
+        
+        case "edit":
+          const editId = await askUser(
+            "Please enter the ID of the task you want to update: "
+          );
+          const newDescription = await askUser(
+            "Please enter the new description: "
+          );
+          const newPriority = await askUser(
+            "Please enter the new priority: "
+          );
+          const newDueDate = await askUser(
+            "Please enter the new date "
+          );
+          editTask(editId, newDescription,newPriority,newDueDate)
+
+        break
 
         case "remove":
           const removeId = await askUser(
@@ -46,9 +71,24 @@ async function main() {
           toggleStatus(toggleId);
           break;
 
+        case "sort":
+          const priorityType = await askUser(
+            "Do you want to sort by low or high priority? "
+          );
+          showPriority(priorityType);
+          break;
+
         case "exit":
           exit = true;
           rl.close(); // Close the readline interface when done
+          break;
+
+        case "pending":
+          showPending();
+          break;
+
+        case "completed":
+          showCompleted();
           break;
 
         default:

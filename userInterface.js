@@ -1,4 +1,5 @@
 const readline = require("readline");
+const { taskList } = require("./tasks");
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -13,8 +14,25 @@ function askUser(questionText) {
   });
 }
 
-function showAll(){
-
+function showPending() {
+  const pendingTasks = taskList.filter((task) => task.status === "pending");
+  pendingTasks.length > 0
+    ? console.log(pendingTasks)
+    : console.log("No pending tasks");
 }
 
-module.exports = { askUser, rl, showAll };
+function showCompleted() {
+  const completedTasks = taskList.filter((task) => task.status === "completed");
+  completedTasks.length > 0
+    ? console.log(completedTasks)
+    : console.log("No completed tasks");
+}
+
+function showPriority(priorityType) {
+  taskList.sort((a, b) => a.priority - b.priority);
+  priorityType === "low"
+    ? console.log(taskList)
+    : console.log(taskList.reverse());
+}
+
+module.exports = { askUser, rl, showPending, showCompleted, showPriority };
