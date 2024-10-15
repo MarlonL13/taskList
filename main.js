@@ -7,14 +7,21 @@ const {
 } = require("./userInterface");
 
 const {
-  taskList,
   createNewTask,
   removeTask,
   toggleStatus,
   editTask,
 } = require("./tasks");
 
+const {
+  initializeTaskFile,
+  loadTaskList,
+  saveTaskList,
+} = require("./taskStorage");
+
 let exit = false;
+initializeTaskFile();
+let taskList = loadTaskList();
 
 async function main() {
   try {
@@ -35,10 +42,10 @@ async function main() {
             "how much is the priority of the task (1-5): "
           );
           const dueDate = await askUser("When is the due date of the task: ");
-          createNewTask(description, priority, dueDate);
+          createNewTask(taskList, description, priority, dueDate);
           console.log(taskList);
           break;
-        
+
         case "edit":
           const editId = await askUser(
             "Please enter the ID of the task you want to update: "
@@ -46,49 +53,47 @@ async function main() {
           const newDescription = await askUser(
             "Please enter the new description: "
           );
-          const newPriority = await askUser(
-            "Please enter the new priority: "
-          );
-          const newDueDate = await askUser(
-            "Please enter the new date "
-          );
-          editTask(editId, newDescription,newPriority,newDueDate)
 
-        break
+          const newPriority = await askUser("Please enter the new priority: ");
+          const newDueDate = await askUser("Please enter the new date ");
+          editTask(taskList, editId, newDescription, newPriority, newDueDate);
+
+          break;
 
         case "remove":
           const removeId = await askUser(
             "Please enter the ID of the task you want to remove: "
           );
-          removeTask(removeId);
+          removeTask(taskList, removeId);
           console.log(taskList);
           break;
 
         case "toggle":
           const toggleId = await askUser(
-            "Please enter the ID of the task you want to change status:"
+            "Please enter the ID of the task you want to change status: "
           );
-          toggleStatus(toggleId);
+          toggleStatus(taskList, toggleId);
           break;
 
         case "sort":
           const priorityType = await askUser(
             "Do you want to sort by low or high priority? "
           );
-          showPriority(priorityType);
+          showPriority(taskList, priorityType);
           break;
 
         case "exit":
+          saveTaskList(taskList);
           exit = true;
           rl.close(); // Close the readline interface when done
           break;
 
         case "pending":
-          showPending();
+          showPending(taskList);
           break;
 
         case "completed":
-          showCompleted();
+          showCompleted(taskList);
           break;
 
         default:

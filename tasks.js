@@ -1,35 +1,19 @@
-let taskList = [
-  {
-    id: 1,
-    description: "First task",
-    status: "pending",
-    priority: 5,
-    dueDate: null,
-  },
-  {
-    id: 2,
-    description: "Second task",
-    status: "pending",
-    priority: 2,
-    dueDate: new Date("2024-10-15"),
-  },
-];
+let taskIdCounter = 0;
 
-let taskIdCounter = taskList.length + 1;
+function createNewTask(taskList, description, priority, dueDate) {
+  taskIdCounter = taskList.length + 1;
 
-function createNewTask(description, priority, dueDate) {
-  priority = Number(priority);
   let task = {
     id: taskIdCounter++,
     description: description,
     status: "pending",
-    priority: priority || 3,
-    dueDate: dueDate || null,
+    priority: Number(priority) || 3,
+    dueDate: dueDate || Date(),
   };
   taskList.push(task);
 }
 
-function removeTask(id) {
+function removeTask(taskList, id) {
   id = Number(id);
   const taskIndex = taskList.findIndex((task) => task.id === id);
   if (taskIndex !== -1) {
@@ -40,7 +24,7 @@ function removeTask(id) {
   }
 }
 
-function toggleStatus(id) {
+function toggleStatus(taskList, id) {
   id = Number(id);
   const task = taskList.find((task) => task.id === id);
   if (task) {
@@ -51,7 +35,7 @@ function toggleStatus(id) {
   }
 }
 
-function editTask(id, newDescription, newPriority, newDueDate) {
+function editTask(taskList, id, newDescription, newPriority, newDueDate) {
   id = Number(id);
   newPriority = Number(newPriority);
   const task = taskList.find((task) => task.id === id);
@@ -66,4 +50,4 @@ function editTask(id, newDescription, newPriority, newDueDate) {
   }
 }
 
-module.exports = { taskList, createNewTask, removeTask, toggleStatus, editTask };
+module.exports = { createNewTask, removeTask, toggleStatus, editTask };
